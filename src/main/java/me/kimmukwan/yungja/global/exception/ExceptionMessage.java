@@ -8,7 +8,9 @@ public enum ExceptionMessage {
     NOT_EQUAL_PASSWORD("비밀번호가 일치하지 않습니다"),
     NOT_FOUND("존재하지 않는 닉네임입니다"),
     TOKEN_EXPIRE("토큰이 만료되었습니다"),
-    NOT_FOUND_USER_ID("존재하지 않는 유저입니다");
+    NOT_FOUND_USER_ID("존재하지 않는 유저입니다"),
+    NOT_MATCH_EMAIL_CODE("코드가 일치하지 않습니다"),
+    NOT_FOUND_EMAIL_CODE("오류가 발생했습니다 다시 발송해주세요");
 
     private final String description;
 

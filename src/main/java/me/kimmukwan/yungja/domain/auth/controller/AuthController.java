@@ -9,6 +9,7 @@ import me.kimmukwan.yungja.domain.auth.service.AuthService;
 import me.kimmukwan.yungja.domain.token.service.TokenService;
 import me.kimmukwan.yungja.domain.user.entity.User;
 import me.kimmukwan.yungja.global.apiResponse.ApiResponse;
+import me.kimmukwan.yungja.global.config.email.service.EmailService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -27,6 +28,7 @@ public class AuthController {
 
     private final AuthService authService;
     private final TokenService tokenService;
+    private final EmailService emailService;
 
     @Value("${cookie.refresh-token.secure}")
     private boolean cookieSecure;
@@ -37,6 +39,8 @@ public class AuthController {
     @PostMapping("/signup")
     public ApiResponse<Void> signup(@RequestBody SignupRequest request){
         authService.signup(request);
+
+        emailService.isVerify(request.email());
 
         return ApiResponse.response(201, true, null, null);
     }
