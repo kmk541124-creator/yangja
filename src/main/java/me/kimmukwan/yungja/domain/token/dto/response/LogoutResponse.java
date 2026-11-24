@@ -1,0 +1,17 @@
+package me.kimmukwan.yungja.domain.token.dto.response;
+
+import me.kimmukwan.yungja.domain.token.entity.RefreshToken;
+import org.springframework.http.ResponseCookie;
+
+public record LogoutResponse(
+        ResponseCookie cookie,
+        String message
+) {
+
+    public static LogoutResponse from(ResponseCookie cookie, String message){
+        return new LogoutResponse(
+                cookie,
+                message
+        );
+    }
+}
