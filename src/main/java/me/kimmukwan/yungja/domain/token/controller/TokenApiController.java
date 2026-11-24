@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import me.kimmukwan.yungja.domain.token.dto.request.CreateAccessTokenRequest;
 import me.kimmukwan.yungja.domain.token.dto.response.CreateTokenResponse;
 import me.kimmukwan.yungja.domain.token.dto.response.LogoutResponse;
-import me.kimmukwan.yungja.domain.token.repository.RefreshTokenRepository;
 import me.kimmukwan.yungja.domain.token.service.TokenService;
 import me.kimmukwan.yungja.domain.user.entity.User;
 import me.kimmukwan.yungja.global.apiResponse.ApiResponse;
@@ -25,7 +24,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class TokenApiController {
     private final TokenService tokenService;
-    private final RefreshTokenRepository refreshTokenRepository;
 
     @Value("${cookie.refresh-token.secure}")
     private boolean cookieSecure;

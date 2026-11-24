@@ -47,7 +47,7 @@ public class AuthController {
 
     @GetMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request){
-        LoginResponse response =  authService.login(request);
+        LoginResponse response = authService.login(request);
 
         ResponseCookie responseCookie = ResponseCookie.from(tokenService.REFRESH_TOKEN_COOKIE_NAME, response.refreshToken())
                 .path("/")

@@ -1,36 +1,32 @@
 package me.kimmukwan.yungja.domain.token.service;
 
 import lombok.RequiredArgsConstructor;
-import me.kimmukwan.yungja.domain.token.entity.RefreshToken;
-import me.kimmukwan.yungja.domain.token.repository.RefreshTokenRepository;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class RefreshTokenService {
-    private final RefreshTokenRepository refreshTokenRepository;
+    private final StringRedisTemplate redisTemplate;
 
-    public RefreshToken findByRefreshToken(String refreshToken){
-        return refreshTokenRepository.findByRefreshToken(refreshToken).orElseThrow(() -> new IllegalArgumentException("유효하지 않거나 만료된 리프레시 토큰입니다"));
+    private static final String REFRESH_PREFIX = "refresh:";
+
+    public boolean isSaved(Long userId, String refreshToken){
+        if(userId == null || refreshToken == null){
+            return false;
+        }
+        String savedToken = redisTemplate.opsForValue().get(REFRESH_PREFIX + userId);
+        return refreshToken.equals(savedToken);
     }
 
-    @Transactional
     public void save(Long userId, String newRefreshToken){
-        RefreshToken refreshToken = refreshTokenRepository.findByUserId(userId)
-                .map(saved -> saved.update(newRefreshToken))
-                .orElse(new RefreshToken(userId, newRefreshToken));
-        refreshTokenRepository.save(refreshToken);
+        redisTemplate.opsForValue().set(REFRESH_PREFIX + userId, newRefreshToken, TokenService.REFRESH_TOKEN_DURATION);
     }
 
-    @Transactional
-    public void delete(String refreshToken, Long userId){
-        if (refreshToken != null) {
-            refreshTokenRepository.findByRefreshToken(refreshToken).ifPresent(refreshTokenRepository::delete);
+    public void delete(Long userId){
+        if(userId == null){
             return;
         }
-        if (userId != null) {
-            refreshTokenRepository.findByUserId(userId).ifPresent(refreshTokenRepository::delete);
-        }
+        redisTemplate.delete(REFRESH_PREFIX + userId);
     }
 }

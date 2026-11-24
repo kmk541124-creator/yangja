@@ -24,17 +24,24 @@ public class TokenService {
     private final RefreshTokenService refreshTokenService;
 
     public String createNewAccessToken(String refreshToken){
-        if(!tokenProvider.validToken(refreshToken, TokenProvider.TYPE_REFRESH)){
+        if(refreshToken == null || !tokenProvider.validToken(refreshToken, TokenProvider.TYPE_REFRESH)){
             throw new IllegalArgumentException("유효하지 않거나 만료된 리프레시 토큰입니다");
         }
 
-        Long userId = refreshTokenService.findByRefreshToken(refreshToken).getUserId()  ;
-        User user = userRepository.findById(userId).orElseThrow(() ->new CustomException(ExceptionMessage.NOT_FOUND_USER_ID));
+        Long userId = tokenProvider.getUserId(refreshToken);
+        if(!refreshTokenService.isSaved(userId, refreshToken)){
+            throw new IllegalArgumentException("유효하지 않거나 만료된 리프레시 토큰입니다");
+        }
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ExceptionMessage.NOT_FOUND_USER_ID));
 
         return tokenProvider.generateToken(user, ACCESS_TOKEN_DURATION, TokenProvider.TYPE_ACCESS);
     }
 
     public void logout(String refreshToken, Long userId){
-        refreshTokenService.delete(refreshToken, userId);
+        if(userId == null && refreshToken != null && tokenProvider.validToken(refreshToken, TokenProvider.TYPE_REFRESH)){
+            userId = tokenProvider.getUserId(refreshToken);
+        }
+        refreshTokenService.delete(userId);
     }
 }

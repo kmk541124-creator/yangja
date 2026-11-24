@@ -58,7 +58,8 @@ public class WebSecurityConfig {
                         .requestMatchers(
                                 "/api/auth/login",
                                 "/api/auth/signup",
-                                "/api/token").permitAll().anyRequest().authenticated()).exceptionHandling(exception -> exception
+                                "/api/token",
+                                "/api/email/**").permitAll().anyRequest().authenticated()).exceptionHandling(exception -> exception
                         .authenticationEntryPoint((request, response, e) ->
                                 ApiResponse.response(401, false, "로그인이 필요합니다", e))
                         .accessDeniedHandler(((request, response, e) ->
