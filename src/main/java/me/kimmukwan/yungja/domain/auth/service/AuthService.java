@@ -13,7 +13,6 @@ import me.kimmukwan.yungja.domain.user.repository.UserRepository;
 import me.kimmukwan.yungja.global.config.jwt.TokenProvider;
 import me.kimmukwan.yungja.global.exception.CustomException;
 import me.kimmukwan.yungja.global.exception.ExceptionMessage;
-import me.kimmukwan.yungja.global.exception.GlobalException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,9 +26,8 @@ public class AuthService {
     private final TokenService tokenService;
     private final TokenProvider tokenProvider;
     private final RefreshTokenService refreshTokenService;
-    private UserRepository userRepository;
-    private GlobalException globalException;
-    private PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public void signup(SignupRequest signupRequest){
         Optional<User> user = userRepository.findByUsername(signupRequest.username());

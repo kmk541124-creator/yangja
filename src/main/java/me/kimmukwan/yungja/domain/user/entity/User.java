@@ -7,7 +7,7 @@ import me.kimmukwan.yungja.global.BaseEntity;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "user")
+@Table(name = "users")
 @SuperBuilder
 public class User extends BaseEntity {
 
@@ -33,5 +33,6 @@ public class User extends BaseEntity {
         this.email = email;
         this.username = username;
         this.password = password;
+        this.role = "USER";
     }
 }
